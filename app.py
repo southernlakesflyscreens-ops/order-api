@@ -5,14 +5,24 @@ from openpyxl import load_workbook
 import os, io, base64, datetime, copy
 
 app = Flask(__name__)
-CORS(app, origins='*')
+app.config['SERVER_NAME'] = None
+
+CORS(app, origins='*', supports_credentials=False)
+
+@app.before_request
+def handle_host():
+    pass  # allow all hosts
 
 @app.after_request
 def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Accept')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Accept,Authorization'
+    response.headers['Access-Control-Allow-Methods'] = 'GET,POST,PUT,OPTIONS'
     return response
+
+@app.route('/', methods=['GET'])
+def index():
+    return jsonify({'status': 'ok', 'service': 'Southern Lakes Order API'})
 
 OUR_NAME = 'Southern Lakes Shade & Screens'
 OUR_ADDR = '37a Sargood Road, Wanaka'
