@@ -37,7 +37,11 @@ def safe_set(ws, addr, val):
         pass
 
 def get_template(name):
-    path = os.path.join(os.path.dirname(__file__), 'templates', name)
+    # Try templates subfolder first, then same directory
+    base = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(base, 'templates', name)
+    if not os.path.exists(path):
+        path = os.path.join(base, name)
     return load_workbook(path)
 
 @app.route('/health', methods=['GET'])
