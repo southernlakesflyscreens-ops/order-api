@@ -5,7 +5,14 @@ from openpyxl import load_workbook
 import os, io, base64, datetime, copy
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins='*')
+
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Accept')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+    return response
 
 OUR_NAME = 'Southern Lakes Shade & Screens'
 OUR_ADDR = '37a Sargood Road, Wanaka'
